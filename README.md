@@ -10,7 +10,7 @@ A [BepInEx](https://github.com/BepInEx/BepInEx) 5 plugin for **Zumbi Blocks 2** 
 
 ## Installation
 
-Copy the DLL into your BepInEx `plugins` folder:
+Download the latest DLL at the [releases](https://github.com/tbv001/viewmodeloffset/releases) page, and then copy the DLL into your BepInEx `plugins` folder:
 
 ```
 Zumbi Blocks 2 Open Alpha\BepInEx\plugins\ViewmodelOffset.dll
