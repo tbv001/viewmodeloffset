@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace ViewmodelOffset;
 
-[BepInPlugin("com.theblackvoid.viewmodeloffset", "Viewmodel Offset", "1.0.0")]
+[BepInPlugin("com.theblackvoid.viewmodeloffset", "Viewmodel Offset", "1.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
