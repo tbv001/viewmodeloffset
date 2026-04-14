@@ -65,7 +65,12 @@ public class Plugin : BaseUnityPlugin
             }
 
             if (playerCam.mode != PlayerCamera.Mode.FirstPerson)
+            {
+                if (playerMain.arms.transform.localScale.x < 0f)
+                    Flip();
+
                 return;
+            }
 
             if (playerMain?.SpawnedSkin == null)
                 return;
