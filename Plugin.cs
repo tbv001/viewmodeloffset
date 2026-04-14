@@ -44,6 +44,16 @@ public class Plugin : BaseUnityPlugin
         private Transform skinTransform;
         private Vector3 currentOffset;
 
+        private void Flip()
+        {
+            if (playerMain?.arms == null)
+                return;
+
+            Vector3 curScale = playerMain.arms.transform.localScale;
+            curScale.x = curScale.x * -1f;
+            playerMain.arms.transform.localScale = curScale;
+        }
+
         private void LateUpdate()
         {
             if (playerCam == null)
@@ -60,9 +70,6 @@ public class Plugin : BaseUnityPlugin
             if (playerMain?.SpawnedSkin == null)
                 return;
 
-            if (ViewmodelOffset == Vector3.zero)
-                return;
-
             if (skinTransform == null)
                 skinTransform = playerMain.SpawnedSkin.transform;
 
@@ -71,7 +78,7 @@ public class Plugin : BaseUnityPlugin
 
             bool isADS = playerMain.arms.ads;
 
-            if (isADS)
+            if (isADS || ViewmodelOffset == Vector3.zero)
             {
                 // Return to default offset when ADSing
                 currentOffset = Vector3.Lerp(currentOffset, gameBaseOffset, Time.deltaTime * lerpSpeed);
@@ -87,6 +94,12 @@ public class Plugin : BaseUnityPlugin
             }
 
             skinTransform.localPosition = currentOffset;
+
+            // Flip test
+            if (playerMain.arms.transform.localScale.x > 0f)
+            {
+                Flip();
+            }
         }
     }
 }
