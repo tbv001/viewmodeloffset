@@ -10,6 +10,7 @@ public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
     public static Vector3 ViewmodelOffset = Vector3.zero;
+    public static bool shouldFlip = false;
     private static ViewmodelOffsetApplier ViewmodelOffsetApplierInstance;
 
     private void Awake()
@@ -22,8 +23,10 @@ public class Plugin : BaseUnityPlugin
         ConfigEntry<float> offsetX = cfg.Bind("Offset", "X (Right/Left)", -0.05f, new ConfigDescription("X viewmodel offset. Positive = right, negative = left.", new AcceptableValueRange<float>(-0.5f, 0.5f)));
         ConfigEntry<float> offsetY = cfg.Bind("Offset", "Y (Up/Down)", -0.1f, new ConfigDescription("Y viewmodel offset. Positive = up, negative = down.", new AcceptableValueRange<float>(-0.5f, 0.5f)));
         ConfigEntry<float> offsetZ = cfg.Bind("Offset", "Z (Forward/Backward)", -0.05f, new ConfigDescription("Z viewmodel offset. Positive = forward, negative = backward.", new AcceptableValueRange<float>(-0.5f, 0.5f)));
+        ConfigEntry<bool> flip = cfg.Bind("Offset", "Flip", false, new ConfigDescription("Whether the viewmodel should be flipped (mirrored) or not."));
 
         ViewmodelOffset = new Vector3(offsetX.Value, offsetY.Value, offsetZ.Value);
+        shouldFlip = flip.Value;
 
         // Create the LateUpdate applier component
         GameObject go = new GameObject("ViewmodelOffsetApplier");
@@ -66,7 +69,7 @@ public class Plugin : BaseUnityPlugin
 
             if (playerCam.mode != PlayerCamera.Mode.FirstPerson)
             {
-                if (playerMain.arms.transform.localScale.x < 0f)
+                if (playerMain.arms.transform.localScale.x < 0f && shouldFlip)
                     Flip();
 
                 return;
@@ -101,7 +104,7 @@ public class Plugin : BaseUnityPlugin
             skinTransform.localPosition = currentOffset;
 
             // Flip test
-            if (playerMain.arms.transform.localScale.x > 0f)
+            if (playerMain.arms.transform.localScale.x > 0f && shouldFlip)
             {
                 Flip();
             }
