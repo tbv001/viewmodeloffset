@@ -37,8 +37,8 @@ public class Plugin : BaseUnityPlugin
 
     private class ViewmodelOffsetApplier : MonoBehaviour
     {
-        private static Vector3 gameBaseOffset = Vector3.up * 0.05f; // From SetCameraTransform() method in PlayerCamera class
-        private static float lerpSpeed = 10f;
+        private readonly Vector3 gameBaseOffset = Vector3.up * 0.05f; // From SetCameraTransform() method in PlayerCamera class
+        private const float lerpSpeed = 10f;
         private PlayerCamera playerCam;
         private PlayerMain playerMain;
         private Transform skinTransform;
