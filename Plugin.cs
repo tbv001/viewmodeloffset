@@ -39,7 +39,7 @@ public class Plugin : BaseUnityPlugin
 
         HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         Logger.LogInfo($"Loaded!");
-        Logger.LogInfo($"Current offset: {ViewmodelOffset}");
+        Logger.LogInfo($"Current offset: {ViewmodelOffset}, Flip/mirror: {shouldFlip}");
     }
 
     [HarmonyPatch(typeof(PlayerSpineControl), "CorrectSpine")]
@@ -48,16 +48,7 @@ public class Plugin : BaseUnityPlugin
         [HarmonyPrefix]
         public static void Prefix(PlayerSpineControl __instance)
         {
-            if (Plugin.shouldFlip)
-            {
-                __instance.deviationY = -__instance.deviationY;
-            }
-        }
-
-        [HarmonyPostfix]
-        public static void Postfix(PlayerSpineControl __instance)
-        {
-            if (Plugin.shouldFlip)
+            if (shouldFlip)
             {
                 __instance.deviationY = -__instance.deviationY;
             }
