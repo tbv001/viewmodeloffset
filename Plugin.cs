@@ -1,7 +1,9 @@
-﻿using BepInEx;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using UnityEngine;
+using HarmonyLib;
+using System.Reflection;
 
 namespace ViewmodelOffset;
 
@@ -9,6 +11,7 @@ namespace ViewmodelOffset;
 public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
+    private static Harmony HarmonyInstance = new Harmony("com.theblackvoid.viewmodeloffset");
     public static Vector3 ViewmodelOffset = Vector3.zero;
     public static bool shouldFlip = false;
     private static ViewmodelOffsetApplier ViewmodelOffsetApplierInstance;
@@ -34,8 +37,31 @@ public class Plugin : BaseUnityPlugin
         ViewmodelOffsetApplierInstance = go.AddComponent<ViewmodelOffsetApplier>();
         DontDestroyOnLoad(go);
 
+        HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         Logger.LogInfo($"Loaded!");
         Logger.LogInfo($"Current offset: {ViewmodelOffset}");
+    }
+
+    [HarmonyPatch(typeof(PlayerSpineControl), "CorrectSpine")]
+    public static class SpineCorrectionPatch
+    {
+        [HarmonyPrefix]
+        public static void Prefix(PlayerSpineControl __instance)
+        {
+            if (Plugin.shouldFlip)
+            {
+                __instance.deviationY = -__instance.deviationY;
+            }
+        }
+
+        [HarmonyPostfix]
+        public static void Postfix(PlayerSpineControl __instance)
+        {
+            if (Plugin.shouldFlip)
+            {
+                __instance.deviationY = -__instance.deviationY;
+            }
+        }
     }
 
     private class ViewmodelOffsetApplier : MonoBehaviour
@@ -67,15 +93,19 @@ public class Plugin : BaseUnityPlugin
                 playerMain = playerCam.playerMain;
             }
 
+            if (playerMain == null)
+                return;
+
             if (playerCam.mode != PlayerCamera.Mode.FirstPerson)
             {
-                if (playerMain.arms.transform.localScale.x < 0f && shouldFlip)
+                if (playerMain.arms != null && playerMain.arms.transform.localScale.x < 0f)
+                {
                     Flip();
-
+                }
                 return;
             }
 
-            if (playerMain?.SpawnedSkin == null)
+            if (playerMain.SpawnedSkin == null)
                 return;
 
             if (skinTransform == null)
@@ -103,8 +133,11 @@ public class Plugin : BaseUnityPlugin
 
             skinTransform.localPosition = currentOffset;
 
-            // Flip test
             if (playerMain.arms.transform.localScale.x > 0f && shouldFlip)
+            {
+                Flip();
+            }
+            else if (playerMain.arms.transform.localScale.x < 0f && !shouldFlip)
             {
                 Flip();
             }
