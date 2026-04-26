@@ -9,7 +9,8 @@ public static class PlayerSpineControlPatch
     [HarmonyPatch("CorrectSpine")]
     public static void CorrectSpine_Prefix(PlayerSpineControl __instance)
     {
-        if (ViewmodelOffset.shouldFlip)
+        PlayerMain pm = __instance.GetComponentInParent<PlayerMain>();
+        if (pm != null && !pm.ForeignPlayer && ViewmodelOffset.shouldFlip)
         {
             __instance.deviationY = -__instance.deviationY;
         }

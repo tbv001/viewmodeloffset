@@ -32,7 +32,6 @@ public class ViewmodelOffset : BaseUnityPlugin
             viewmodelOffset = new Vector3(offsetX.Value, offsetY.Value, offsetZ.Value);
             shouldFlip = flip.Value;
 
-            gameObject.AddComponent<ViewmodelOffsetApplier>();
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
             Logger.LogInfo($"Successfully loaded!");
         }
