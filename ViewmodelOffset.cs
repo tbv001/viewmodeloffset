@@ -14,7 +14,7 @@ public class ViewmodelOffset : BaseUnityPlugin
     internal static new ManualLogSource Logger;
     public const string PLUGIN_GUID = "com.theblackvoid.viewmodeloffset";
     public const string PLUGIN_NAME = "Viewmodel Offset";
-    public const string PLUGIN_VERSION = "1.1.0";
+    public const string PLUGIN_VERSION = "1.2.0";
     private Harmony HarmonyInstance = new Harmony(PLUGIN_GUID);
     public static Vector3 viewmodelOffset = Vector3.zero;
     public static bool shouldFlip = false;
